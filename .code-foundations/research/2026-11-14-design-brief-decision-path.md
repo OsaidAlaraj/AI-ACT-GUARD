@@ -142,11 +142,11 @@ text) and is replaced by `ink-muted`. Fonts in the frames: Manrope (UI), Inter (
 
 ### 8.3 Page 01 · Entry — decided: A refined (frame `Page 01 · DECIDED · A refined`)
 
-- Left: the decision path, faint, all eight legal-test steps in order (Start, Prohibited?, Your
-  role, High-risk?, Exemption?, Transparency, AI literacy, Verdict), numbered 01–08. Start is
-  current (filled `action` node, 4 px `action-tint` ring, "You are here"). Assessed steps ahead:
-  white node, `line-state` outline, short note (e.g. "Article 50"). Not-assessed: see 8.2.1.
-- Right: "Which AI tool are you assessing?", one card with a two-way switch **Website | Not public
+- **No decision path on this page** (Osaid, 2026-11-14). The path (arc) first appears when the
+  customer enters the questionnaire, with the first question; it draws in once, slowly
+  (0.7–0.85 s, reduced motion → appears). This supersedes §3A "the empty path is drawn faintly
+  behind the input". The reading-the-website step (Page 02) has no path either.
+- One centred column, 732 px wide: "Which AI tool are you assessing?", one card with a two-way switch **Website | Not public
   yet** (replaces B's two cards and the "Describe your tool instead" link). Website: URL field,
   helper "We read public pages only. What we find stays 'from website, unconfirmed' until you
   check it.", primary button "Read website". Not public yet: a description field in the same card.
@@ -161,7 +161,7 @@ text) and is replaced by `ink-muted`. Fonts in the frames: Manrope (UI), Inter (
 
 ### 8.4 Page 02 · Reading the website — options open
 
-Three options in section `Page 02 · Reading the website · options`, all with Start as the current
-step ("Reading the website") and no spinner: **A** live checklist (done / now / waiting rows +
+Three options in section `Page 02 · Reading the website · options`, centred column, no path and
+no spinner: **A** live checklist (done / now / waiting rows +
 "Found so far"), **B** persona card fills in (Company + Tool fields arrive marked unconfirmed),
 **C** evidence first (each finding shows the sentence and page it came from).
