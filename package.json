@@ -9,6 +9,7 @@
   "scripts": {
     "prepare": "git config core.hooksPath scripts/hooks",
     "verify": "node scripts/verify-hooks-live.mjs && pnpm -r --if-present typecheck && prettier --check . && eslint . --max-warnings=0 && depcruise apps packages --config .dependency-cruiser.cjs && vitest run",
+    "verify:static": "node scripts/verify-hooks-live.mjs && pnpm -r --if-present typecheck && prettier --check . && eslint . --max-warnings=0 && depcruise apps packages --config .dependency-cruiser.cjs",
     "format": "prettier --write .",
     "lint": "eslint . --max-warnings=0",
     "arch": "depcruise apps packages --config .dependency-cruiser.cjs",

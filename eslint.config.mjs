@@ -17,6 +17,14 @@ export default tseslint.config(
   },
   ...tseslint.configs.recommended,
   {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+    },
+  },
+  {
     files: ["apps/web/**/*.{ts,tsx}"],
     plugins: { "@next/next": nextPlugin },
     settings: { next: { rootDir: "apps/web/" } },
