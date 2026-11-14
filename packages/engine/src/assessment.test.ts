@@ -1,6 +1,6 @@
 // T-002 C2, C3, C7, C9: the engine chooses the next question and marks unassessed steps.
 import { describe, expect, it } from "vitest";
-import { STEP_STATUS, nextStep } from "./assessment";
+import { InvalidAnswerError, STEP_STATUS, nextStep } from "./assessment";
 import { FACTS, type Answers } from "./facts";
 import { LEGAL_TEST_STEPS, findBannedWording } from "./legal-test";
 import { evaluateRules, resultKey } from "./rules";
@@ -110,6 +110,20 @@ describe("nextStep", () => {
         expect(STEP_STATUS[obligation.step], `${scenario.id} ${obligation.ruleId}`).toBe(
           "assessed",
         );
+      }
+    }
+  });
+
+  it("rejects an answer that is not one of the fact's options, never treating it as unanswered", () => {
+    expect(() => nextStep({ usesAi: "yes", role: "Provider" })).toThrow(InvalidAnswerError);
+    expect(() => nextStep({ usesAi: "yes", noSuchFact: "yes" })).toThrow(InvalidAnswerError);
+    // Neighbour that must not fire: every real option of every fact is accepted.
+    for (const fact of FACTS) {
+      for (const option of fact.options) {
+        expect(
+          () => nextStep({ [fact.id]: option.value }),
+          `${fact.id}=${option.value}`,
+        ).not.toThrow();
       }
     }
   });

@@ -37,6 +37,26 @@ export const STEP_STATUS: Readonly<Record<LegalTestStep, StepResult["status"]>> 
   verdict: "assessed",
 };
 
+/** An answer names a fact the engine does not hold, or a value that is not one of its options. */
+export class InvalidAnswerError extends Error {
+  constructor(
+    readonly factId: string,
+    readonly value: string,
+  ) {
+    super(`"${value}" is not an option of fact "${factId}"`);
+    this.name = "InvalidAnswerError";
+  }
+}
+
+/** Fails closed: an unrecognised value would otherwise read as answered yet match no rule. */
+function assertValidAnswers(answers: Answers): void {
+  for (const [factId, value] of Object.entries(answers)) {
+    if (value === undefined) continue;
+    const fact = FACTS.find((f) => f.id === factId);
+    if (!fact?.options.some((o) => o.value === value)) throw new InvalidAnswerError(factId, value);
+  }
+}
+
 function isRelevant(answers: Answers, fact: Fact): boolean {
   const results = new Set(
     fact.options.map((option) => resultKey(evaluateRules({ ...answers, [fact.id]: option.value }))),
@@ -45,6 +65,7 @@ function isRelevant(answers: Answers, fact: Fact): boolean {
 }
 
 export function nextStep(answers: Answers): NextStep {
+  assertValidAnswers(answers);
   const fact = FACTS.find((f) => answers[f.id] === undefined && isRelevant(answers, f));
   if (fact) return { kind: "question", fact };
   return {

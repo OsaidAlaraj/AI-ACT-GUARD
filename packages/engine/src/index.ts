@@ -25,6 +25,7 @@ export {
   type RuleId,
 } from "./rules";
 export {
+  InvalidAnswerError,
   STEP_STATUS,
   nextStep,
   type AssessmentResult,
