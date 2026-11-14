@@ -5,9 +5,10 @@ import { LEGAL_CONTENT_VERSION } from "./knowledge/aia-2026-11";
 import { LEGAL_TEST_STEPS, type LegalTestStep } from "./legal-test";
 import { evaluateRules, resultKey, type ObligationResult } from "./rules";
 
-export type StepResult =
-  | { readonly step: LegalTestStep; readonly status: "not-assessed" }
-  | { readonly step: LegalTestStep; readonly status: "assessed" };
+export interface StepResult {
+  readonly step: LegalTestStep;
+  readonly status: "assessed" | "not-assessed";
+}
 
 export interface AssessmentResult {
   readonly legalContentVersion: string;
@@ -19,8 +20,22 @@ export type NextStep =
   | { readonly kind: "question"; readonly fact: Fact }
   | { readonly kind: "result"; readonly result: AssessmentResult };
 
-/** Steps this version does not assess; they are marked, never given a verdict. */
-const NOT_ASSESSED: readonly LegalTestStep[] = ["prohibited", "high-risk", "exemption"];
+/**
+ * What this version does with each legal-test step. A Record over `LegalTestStep`, so a step added
+ * to `LEGAL_TEST_STEPS` fails to compile until it is classified here, never defaulting to assessed.
+ * Prohibited practices, high-risk classification and exemptions are outside T-002's scope: they
+ * are marked not assessed, never given a verdict.
+ */
+export const STEP_STATUS: Readonly<Record<LegalTestStep, StepResult["status"]>> = {
+  start: "assessed",
+  prohibited: "not-assessed",
+  role: "assessed",
+  "high-risk": "not-assessed",
+  exemption: "not-assessed",
+  transparency: "assessed",
+  literacy: "assessed",
+  verdict: "assessed",
+};
 
 function isRelevant(answers: Answers, fact: Fact): boolean {
   const results = new Set(
@@ -36,11 +51,7 @@ export function nextStep(answers: Answers): NextStep {
     kind: "result",
     result: {
       legalContentVersion: LEGAL_CONTENT_VERSION,
-      steps: LEGAL_TEST_STEPS.map((step) =>
-        NOT_ASSESSED.includes(step)
-          ? { step, status: "not-assessed" as const }
-          : { step, status: "assessed" as const },
-      ),
+      steps: LEGAL_TEST_STEPS.map((step) => ({ step, status: STEP_STATUS[step] })),
       obligations: evaluateRules(answers),
     },
   };

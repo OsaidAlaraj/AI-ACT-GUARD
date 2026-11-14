@@ -42,7 +42,7 @@ export const FACTS: readonly Fact[] = [
     id: "role",
     step: "role",
     question: "What is your business’s role for this tool?",
-    why: "Some duties fall on the provider who develops the tool, others on the deployer who uses it (Article 3(3) and 3(4)). Running your own system makes you its deployer too. Renaming or rebranding another company’s tool alone does not make you its provider.",
+    why: "Some duties fall on the provider who develops the tool, others on the deployer who uses it (Article 3(3) and 3(4)). Running your own system makes you its deployer too.",
     options: [
       {
         value: "provider",
@@ -65,13 +65,16 @@ export const FACTS: readonly Fact[] = [
     id: "interaction",
     step: "transparency",
     question: "Who uses the tool directly?",
-    why: "People who interact with an AI system directly must be told it is AI (Article 50(1)). Customers who only receive replies your staff reviewed are not talking to the AI, but your staff using the tool are.",
+    why: "People who interact with an AI system directly must be told it is AI (Article 50(1)). Customers who only receive replies that staff reviewed are not talking to the AI, but the staff using the tool are.",
     options: [
       { value: "public-direct", label: "The public or customers talk to it directly" },
-      { value: "staff-direct", label: "Only our staff talk to it directly" },
+      {
+        value: "staff-direct",
+        label: "Only staff talk to it directly (ours, or our customers’ staff)",
+      },
       {
         value: "staff-assist-reviewed",
-        label: "Our staff use it to draft replies, which they review and send",
+        label: "Staff use it to draft replies, which they review and send",
       },
       UNKNOWN,
     ],
@@ -79,7 +82,7 @@ export const FACTS: readonly Fact[] = [
   {
     id: "aiObvious",
     step: "transparency",
-    question: "Would your staff obviously know they are using an AI?",
+    question: "Would the staff using it obviously know they are using an AI?",
     why: "No notice is needed where it is obvious to a reasonably well-informed person that they are dealing with an AI (Article 50(1)). The Commission reads this exception narrowly, for example for trained, AI-literate staff.",
     options: yesNo("Yes, it is obvious to them", "No, or not always"),
   },
@@ -101,10 +104,21 @@ export const FACTS: readonly Fact[] = [
   {
     id: "onMarketBeforeAug2026",
     step: "transparency",
-    question:
-      "Was it placed on the market (made available to other organisations) before 2 August 2026?",
-    why: "Generators placed on the market before 2 August 2026 have until 2 December 2026 to mark their output (Article 111(4)). A tool only used in-house does not get this extra time.",
-    options: yesNo("Yes", "No"),
+    question: "Was the tool in use before 2 August 2026, and how?",
+    why: "Generators placed on the market before 2 August 2026 have until 2 December 2026 to mark their output (Article 111(4)). The Commission’s non-binding guidelines also extend this to tools only put into service (used in-house) by then.",
+    options: [
+      {
+        value: "yes",
+        label:
+          "Yes, it was placed on the market (made available to other organisations) before then",
+      },
+      {
+        value: "in-house",
+        label: "It was only used in-house (put into service) before then",
+      },
+      { value: "no", label: "No, it was not in use before then" },
+      UNKNOWN,
+    ],
   },
   {
     id: "emotionOrBiometric",
@@ -118,8 +132,8 @@ export const FACTS: readonly Fact[] = [
     id: "deepfake",
     step: "transparency",
     question:
-      "Does the tool create or change images, audio or video so that real people, objects, places or events appear authentic when they are not?",
-    why: "Deployers must disclose deep fakes (Article 50(4)).",
+      "Does the tool create or change images, audio or video that resembles existing persons, objects, places, entities or events and would falsely appear to a person to be authentic or truthful?",
+    why: "Deployers must disclose deep fakes (Article 50(4)). That is the law’s definition of a deep fake (Article 3(60)).",
     options: yesNo("Yes", "No"),
   },
   {

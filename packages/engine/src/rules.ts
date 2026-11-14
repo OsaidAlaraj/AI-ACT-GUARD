@@ -2,7 +2,8 @@
 // Conditions follow the verbatim law in the knowledge base, read with the Commission's guidelines.
 import type { Answers } from "./facts";
 import type { LegalTestStep, StepVerdict } from "./legal-test";
-import type { RuleId } from "./scenarios";
+
+export type RuleId = "50-1" | "50-2" | "50-3" | "50-4a" | "50-4b" | "Art4";
 
 export interface ObligationResult {
   readonly ruleId: RuleId;
@@ -38,7 +39,11 @@ export const RULES: readonly Rule[] = [
     step: "transparency",
     provisionIds: ["AIA-Art50-3", "AIA-Art50-5", "AIA-Art3-39", "AIA-Art3-40"],
   },
-  { id: "50-4a", step: "transparency", provisionIds: ["AIA-Art50-4", "AIA-Art50-5"] },
+  {
+    id: "50-4a",
+    step: "transparency",
+    provisionIds: ["AIA-Art50-4", "AIA-Art50-5", "AIA-Art3-60"],
+  },
   { id: "50-4b", step: "transparency", provisionIds: ["AIA-Art50-4", "AIA-Art50-5"] },
   {
     id: "Art4",
@@ -135,6 +140,12 @@ function rule50_2(a: Answers): Outcome {
       "As its provider, you must mark the content the tool generates as AI-generated, in a machine-readable way.";
     if (a.onMarketBeforeAug2026 === "yes") return applies(reason, ART50_2_TRANSITION);
     if (a.onMarketBeforeAug2026 === "no") return applies(reason, ART50_FROM);
+    if (a.onMarketBeforeAug2026 === "in-house") {
+      return applies(
+        `${reason} The law’s text gives extra time only to tools placed on the market before 2 August 2026, so plan for that date. The Commission’s non-binding guidelines also extend the 2 December 2026 deadline to tools put into service before then.`,
+        ART50_FROM,
+      );
+    }
     return applies(
       `${reason} The date depends on whether it was placed on the market before 2 August 2026.`,
       undefined,

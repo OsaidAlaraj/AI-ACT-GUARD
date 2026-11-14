@@ -1,8 +1,8 @@
-// T-001 C2, C3, C7, C9: the engine chooses the next question and marks unassessed steps.
+// T-002 C2, C3, C7, C9: the engine chooses the next question and marks unassessed steps.
 import { describe, expect, it } from "vitest";
-import { nextStep } from "./assessment";
+import { STEP_STATUS, nextStep } from "./assessment";
 import { FACTS, type Answers } from "./facts";
-import { findBannedWording } from "./legal-test";
+import { LEGAL_TEST_STEPS, findBannedWording } from "./legal-test";
 import { evaluateRules, resultKey } from "./rules";
 import { runScripted } from "./runner";
 import { SCENARIOS } from "./scenarios";
@@ -93,20 +93,24 @@ describe("nextStep", () => {
     }
   });
 
+  it("leaves exactly prohibited, high-risk and exemption unassessed in this version (C9)", () => {
+    const notAssessed = LEGAL_TEST_STEPS.filter((s) => STEP_STATUS[s] === "not-assessed");
+    expect(notAssessed).toEqual(["prohibited", "high-risk", "exemption"]);
+  });
+
   it("marks unassessed steps, never judges them (C9)", () => {
     for (const scenario of SCENARIOS) {
       const { result } = runScripted(scenario.facts);
-      for (const id of ["prohibited", "high-risk", "exemption"]) {
-        const step = result.steps.find((s) => s.step === id);
-        expect(step, `${scenario.id} ${id}`).toEqual({ step: id, status: "not-assessed" });
+      expect(result.steps.map((s) => s.step)).toEqual([...LEGAL_TEST_STEPS]);
+      for (const { step, status } of result.steps) {
+        expect(status, `${scenario.id} ${step}`).toBe(STEP_STATUS[step]);
       }
-      for (const id of ["role", "transparency", "literacy"]) {
-        const step = result.steps.find((s) => s.step === id);
-        expect(step?.status, `${scenario.id} ${id}`).toBe("assessed");
+      // No obligation may sit on a step this version does not assess.
+      for (const obligation of result.obligations) {
+        expect(STEP_STATUS[obligation.step], `${scenario.id} ${obligation.ruleId}`).toBe(
+          "assessed",
+        );
       }
-      expect(
-        result.obligations.every((o) => o.step === "transparency" || o.step === "literacy"),
-      ).toBe(true);
     }
   });
 });

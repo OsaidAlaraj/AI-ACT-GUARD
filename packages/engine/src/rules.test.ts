@@ -1,13 +1,13 @@
-// T-001 C4–C7: verdicts follow the law and the guidance, cite only the knowledge base, and use no
+// T-002 C4–C7: verdicts follow the law and the guidance, cite only the knowledge base, and use no
 // banned wording.
 import { describe, expect, it } from "vitest";
 import { LEGAL_CONTENT_VERSION, PROVISIONS_2026_11 } from "./knowledge/aia-2026-11";
 import { createInMemoryKnowledge } from "./knowledge/in-memory";
 import { FACTS } from "./facts";
 import { findBannedWording } from "./legal-test";
-import { RULES, evaluateRules } from "./rules";
+import { RULES, evaluateRules, type RuleId } from "./rules";
 import { runScripted } from "./runner";
-import { SCENARIOS, type RuleId } from "./scenarios";
+import { SCENARIOS } from "./scenarios";
 
 describe("scenario table (C4, C5)", () => {
   for (const scenario of SCENARIOS) {
@@ -200,11 +200,120 @@ describe("every rule cites binding law", () => {
   });
 });
 
-describe("Article 111(4) wording", () => {
-  it("asks about placing on the market only, as the binding text does", () => {
+describe("applies-from dates come from the cited provisions", () => {
+  // The one bounded exclusion: Art. 111(4) carries no appliesFrom of its own; its date is in its
+  // operative text, checked below.
+  const TRANSITION = { ruleId: "50-2", date: "2026-12-02", provisionId: "AIA-Art111-4" } as const;
+
+  it("every applies-from date in every result is the appliesFrom of a provision the rule cites", () => {
+    const byId = new Map(PROVISIONS_2026_11.map((p) => [p.id, p]));
+    const seen = new Set<string>();
+    for (const { answers } of allAnswerCombos()) {
+      for (const o of evaluateRules(answers)) {
+        if (!o.appliesFrom) continue;
+        seen.add(`${o.ruleId}@${o.appliesFrom}`);
+        if (o.ruleId === TRANSITION.ruleId && o.appliesFrom === TRANSITION.date) {
+          expect(o.citations).toContain(TRANSITION.provisionId);
+          continue;
+        }
+        const citedDates = o.citations.map((id) => byId.get(id)?.appliesFrom);
+        expect(citedDates, `${o.ruleId} ${o.appliesFrom}`).toContain(o.appliesFrom);
+      }
+    }
+    // Witness: every rule produced a dated result somewhere, and the transition was exercised.
+    expect(new Set([...seen].map((k) => k.split("@")[0]))).toEqual(new Set(RULES.map((r) => r.id)));
+    expect(seen).toContain(`${TRANSITION.ruleId}@${TRANSITION.date}`);
+  });
+
+  it("the Article 50(2) transition date is the one in Article 111(4)'s text", () => {
+    const text = PROVISIONS_2026_11.find((p) => p.id === TRANSITION.provisionId)?.text ?? "";
+    expect(text).toContain("by 2 December 2026");
+  });
+});
+
+/** Every combination of answers to the catalogued facts, one option per fact. */
+function allAnswerCombos(): { answers: Record<string, string> }[] {
+  let combos: Record<string, string>[] = [{}];
+  for (const fact of FACTS) {
+    combos = combos.flatMap((c) => fact.options.map((o) => ({ ...c, [fact.id]: o.value })));
+  }
+  return combos.map((answers) => ({ answers }));
+}
+
+describe("legal review fixes (T-002 Phase 6)", () => {
+  const provider50_2 = (onMarket: string) =>
+    evaluateRules({
+      usesAi: "yes",
+      role: "both",
+      writesOwnText: "generates",
+      onMarketBeforeAug2026: onMarket,
+    }).find((o) => o.ruleId === "50-2");
+
+  it("an in-house generator gets the binding date, with the Commission's wider reading shown", () => {
     const fact = FACTS.find((f) => f.id === "onMarketBeforeAug2026");
-    expect(fact?.question).toMatch(/placed on the market/);
-    expect(fact?.question).not.toMatch(/put into service/);
+    expect(fact?.options.map((o) => o.value)).toContain("in-house");
+    const rule = provider50_2("in-house");
+    expect(rule?.verdict).toBe("applies");
+    expect(rule?.appliesFrom).toBe("2026-08-02");
+    expect(rule?.reason).toMatch(/put into service/);
+    expect(rule?.reason).toMatch(/2 December 2026/);
+    expect(rule?.reason).toMatch(/non-binding/);
+    expect(rule?.citations).toContain("EC-G50-2026");
+  });
+
+  it("the guidance summary carries para. 153's 'or put into service'", () => {
+    const text = PROVISIONS_2026_11.find((p) => p.id === "EC-G50-2026")?.text ?? "";
+    expect(text).toMatch(/Para\. 153[^.]*put into service/);
+  });
+
+  it("makes no claim about rebranding that the knowledge base does not hold", () => {
+    for (const fact of FACTS) expect(fact.why, fact.id).not.toMatch(/rebrand/i);
+  });
+
+  it("asks about deep fakes in the words of Article 3(60), and rule 50-4a cites it", () => {
+    const fact = FACTS.find((f) => f.id === "deepfake");
+    expect(fact?.question).toMatch(
+      /resembles? existing persons, objects, places, entities or events/,
+    );
+    expect(fact?.question).toMatch(/falsely appear/);
+    expect(fact?.why).toMatch(/Article 3\(60\)/);
+    expect(RULES.find((r) => r.id === "50-4a")?.provisionIds).toContain("AIA-Art3-60");
+  });
+
+  it("every Article a question's explanation cites is in the knowledge base", () => {
+    const ids = new Set(PROVISIONS_2026_11.map((p) => p.id));
+    let refs = 0;
+    for (const fact of FACTS) {
+      for (const m of fact.why.matchAll(/Article (\d+)(?:\((\d+)\))?(?: and (\d+)\((\d+)\))?/g)) {
+        const [, art, para, , para2] = m;
+        for (const p of [para, para2]) {
+          if (p === undefined && para !== undefined) continue;
+          const id = p === undefined ? `AIA-Art${art}` : `AIA-Art${art}-${p}`;
+          refs += 1;
+          expect(ids.has(id), `${fact.id} cites ${id}`).toBe(true);
+        }
+      }
+    }
+    expect(refs).toBeGreaterThan(8);
+  });
+});
+
+describe("Article 111(4) wording", () => {
+  it("gives the binding transition only to the 'placed on the market' answer", () => {
+    const fact = FACTS.find((f) => f.id === "onMarketBeforeAug2026");
+    const label = (v: string) => fact?.options.find((o) => o.value === v)?.label ?? "";
+    expect(label("yes")).toMatch(/placed on the market/);
+    expect(label("yes")).not.toMatch(/put into service/);
+    const dateFor = (v: string) =>
+      evaluateRules({
+        usesAi: "yes",
+        role: "provider",
+        writesOwnText: "generates",
+        onMarketBeforeAug2026: v,
+      }).find((o) => o.ruleId === "50-2")?.appliesFrom;
+    expect(dateFor("yes")).toBe("2026-12-02");
+    expect(dateFor("in-house")).toBe("2026-08-02");
+    expect(dateFor("no")).toBe("2026-08-02");
   });
 });
 

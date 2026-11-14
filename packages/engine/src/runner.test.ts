@@ -1,4 +1,4 @@
-// T-001 C8: the scripted-customer runner (requirements D15).
+// T-002 C8: the scripted-customer runner (requirements D15).
 import { describe, expect, it } from "vitest";
 import { UnscriptedQuestionError, runScripted } from "./runner";
 import { SCENARIOS } from "./scenarios";

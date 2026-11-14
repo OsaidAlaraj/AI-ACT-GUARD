@@ -1,9 +1,8 @@
-// The T-001 scenario table as data (tickets/T-001-engine-chatbot-transparency.md, C4).
+// The T-002 scenario table as data (tickets/T-002-engine-chatbot-transparency.md, C4).
 // Shared by the assessment, rules and runner tests. `facts` lists exactly the facts the engine
 // asks in that scenario, in FACTS order, with the scripted customer's answers.
 import type { StepVerdict } from "./legal-test";
-
-export type RuleId = "50-1" | "50-2" | "50-3" | "50-4a" | "50-4b" | "Art4";
+import type { RuleId } from "./rules";
 
 export interface ExpectedVerdict {
   readonly verdict: StepVerdict;
