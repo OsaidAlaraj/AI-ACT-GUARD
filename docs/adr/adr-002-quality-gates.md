@@ -31,7 +31,9 @@ Runs, in order, failing on the first red step:
   `core.hooksPath scripts/hooks`).
 - Claude Code `Stop` hook (`.claude/hooks/verify-on-stop.mjs`) runs it at turn end (backstop).
 - Claude Code `PostToolUse` hook (`.claude/hooks/format-edited.mjs`) formats edited files.
-- GitHub Actions (`.github/workflows/verify.yml`) runs it on every push to `main` and every PR.
+- GitHub Actions (`.github/workflows/verify.yml`) runs it on every push to `main` and every PR,
+  followed by `pnpm build` (the real Next.js build), because the fast gate cannot see bundler
+  module resolution.
 
 ### Separate steps (never in the fast gate)
 

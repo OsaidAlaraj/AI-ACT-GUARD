@@ -17,6 +17,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
+      # The fast gate cannot see bundler resolution; the real build can (adr-002).
+      - run: pnpm build
 
   # Test-strength (factor 14), kept out of the fast gate (adr-002). Runs on every PR.
   mutation:

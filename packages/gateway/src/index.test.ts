@@ -6,7 +6,7 @@ import {
   createModelGatewayFor,
   resolveLanguageModel,
   type GatewayConfig,
-} from "./index.js";
+} from "./index";
 
 describe("configFromEnv", () => {
   it("accepts each supported provider with a pinned model id", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BANNED_WORDING, LEGAL_TEST_STEPS, findBannedWording } from "./legal-test.js";
+import { BANNED_WORDING, LEGAL_TEST_STEPS, findBannedWording } from "./legal-test";
 
 describe("legal test step order (D13.1)", () => {
   it("walks prohibited practices before role, role before high-risk, and ends at the verdict", () => {

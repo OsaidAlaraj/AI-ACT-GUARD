@@ -14,7 +14,8 @@
     "arch": "depcruise apps packages --config .dependency-cruiser.cjs",
     "test": "vitest run",
     "test:mutation": "stryker run",
-    "dev": "pnpm --filter @aag/web dev"
+    "dev": "pnpm --filter @aag/web dev",
+    "build": "pnpm --filter @aag/web build"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "16.4.6",

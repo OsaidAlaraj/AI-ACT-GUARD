@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { sql } from "drizzle-orm";
-import { createTestDb } from "./testing.js";
+import { createTestDb } from "./testing";
 
 describe("createTestDb", () => {
   let close: (() => Promise<void>) | undefined;

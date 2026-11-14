@@ -35,3 +35,5 @@ When a rule here would grow a war story, write the test and delete the story.
 | Lesson | Enforced by |
 | ------ | ----------- |
 | Under pnpm, an undeclared package does not resolve, so a boundary rule matching only `node_modules/<pkg>/` passed with `ai` and `drizzle-orm` imported inside the engine (found by negative control at setup, 2026-11-14). | `.dependency-cruiser.cjs`: rules match bare specifiers too, plus `not-to-unresolvable` |
+| The gate (tsc, Vitest) was green while `next build` failed: Turbopack does not map `./x.js` to `./x.ts` in workspace source (found at setup, 2026-11-14). | `pnpm build` in CI (`.github/workflows/verify.yml`); relative imports carry no `.js` extension |
+| The AI SDK's `jsonSchema()` does not validate model replies; an off-schema reply passed through the gateway (found by a red test at setup, 2026-11-14). | `packages/gateway/src/index.test.ts` "rejects a response that does not match the schema" |

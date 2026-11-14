@@ -6,7 +6,7 @@ export type {
   ModelResponse,
   ModelUsage,
   Provision,
-} from "./ports.js";
+} from "./ports";
 export {
   BANNED_WORDING,
   LEGAL_TEST_STEPS,
@@ -14,4 +14,4 @@ export {
   type LegalTestStep,
   type Role,
   type StepVerdict,
-} from "./legal-test.js";
+} from "./legal-test";
