@@ -37,9 +37,9 @@ export const BANNED_WORDING = [
  */
 export function findBannedWording(text: string): string[] {
   const withoutDisclaimer = text.replace(/\bnot legal advice\b/gi, "");
+  // Terms are plain words (a test asserts no regex metacharacters), so no escaping is needed.
   return BANNED_WORDING.filter((term) => {
-    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const flags = term === "CE" ? "" : "i";
-    return new RegExp(`\\b${escaped}\\b`, flags).test(withoutDisclaimer);
+    return new RegExp(`\\b${term}\\b`, flags).test(withoutDisclaimer);
   });
 }

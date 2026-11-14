@@ -10,6 +10,9 @@ export async function createTestDb() {
   return {
     db,
     client,
-    close: () => client.close(),
+    /** Safe to call more than once. */
+    close: async () => {
+      if (!client.closed) await client.close();
+    },
   };
 }

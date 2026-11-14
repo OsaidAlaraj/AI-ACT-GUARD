@@ -2,10 +2,11 @@
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
   "_comment": "Test-strength (factor 14). Run separately from the fast gate: `pnpm test:mutation` (adr-002). In /work Phase 5b, pass --mutate for the changed files.",
   "testRunner": "vitest",
+  "plugins": ["@stryker-mutator/vitest-runner"],
   "vitest": { "configFile": "vitest.config.ts" },
   "mutate": ["packages/*/src/**/*.ts", "!packages/*/src/**/*.test.ts"],
   "incremental": true,
   "incrementalFile": "reports/stryker-incremental.json",
-  "reporters": ["clear-text", "progress", "html"],
+  "reporters": ["clear-text", "progress", "html", "json"],
   "thresholds": { "high": 80, "low": 70, "break": 60 }
 }
