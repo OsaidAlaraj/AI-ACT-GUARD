@@ -8,4 +8,3 @@ ticket file is the record. Status vocabulary: `Not started` · `In progress` ·
 
 | ID  | Title | Type | Status | Phase | Ticket |
 | --- | ----- | ---- | ------ | ----- | ------ |
-| T-002 | Engine: chatbot transparency and AI literacy (follow-up to T-001) | Component | In progress | Stage A w1 | [ticket](tickets/T-002-engine-chatbot-transparency.md) |

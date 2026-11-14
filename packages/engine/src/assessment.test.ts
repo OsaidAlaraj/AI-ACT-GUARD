@@ -77,6 +77,8 @@ describe("nextStep", () => {
     for (const { answers } of allPaths()) {
       for (const obligation of evaluateRules(answers)) {
         expect(findBannedWording(obligation.reason), obligation.reason).toEqual([]);
+        // Every verdict carries a real reason the customer can read (D5).
+        expect(obligation.reason.length, obligation.ruleId).toBeGreaterThan(20);
         if (obligation.vendorQuestion) {
           expect(findBannedWording(obligation.vendorQuestion)).toEqual([]);
         }

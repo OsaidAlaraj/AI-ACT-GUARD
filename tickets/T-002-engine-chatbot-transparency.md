@@ -4,7 +4,7 @@
 
 | Started    | Completed |
 | ---------- | --------- |
-| 2026-11-14 |           |
+| 2026-11-14 | 2026-11-14 |
 
 ## Goal
 
@@ -272,7 +272,53 @@ All in `packages/engine` (pure; adr-001 boundary unchanged). Design recorded in 
 
 ## Evidence
 
-_(filled during execution)_
+- **Red first:** on the typed stubs, `pnpm exec vitest run packages/engine` →
+  `Tests  29 failed | 9 passed (38)` (the 9 were the pre-existing knowledge and banned-wording
+  tests). Phase 6 regressions were each seen red before the fix: legal fixes
+  `Tests  4 failed | 62 passed (66)`; invalid-answer guard `Tests  1 failed | 66 passed (67)`;
+  the citation invariant was driven red by citing Article 3(60) before adding it
+  (`deepfake cites AIA-Art3-60: expected false to be true`); the non-empty-reason invariant was
+  driven red by blanking `NOT_AI` (`× produces no banned wording on any answer path (C7)`).
+- **Green:** `pnpm verify` → `Test Files  7 passed (7)`, `Tests  79 passed (79)`,
+  `✔ no dependency violations found (25 modules, 46 dependencies cruised)`. Engine alone:
+  `pnpm exec vitest run packages/engine` → `Tests  67 passed (67)`.
+- **Mutation:** `pnpm exec stryker run --mutate "packages/engine/src/rules.ts,packages/engine/src/assessment.ts,packages/engine/src/runner.ts"`
+  (cache cleared first) → all files **98.21%** (rules 99.37, assessment 92.59, runner 94.12;
+  351 killed, 32 timeout, 7 survived). The two empty-reason survivors are now killed by the
+  non-empty-reason invariant. Remaining survivors, judged equivalent or cosmetic: error `name` and
+  message strings (`InvalidAnswerError`, `UnscriptedQuestionError`); `value === undefined` in the
+  answer guard (the `Answers` type admits no undefined values); `results.size >= 2` → `> 2` in
+  `isRelevant` (previously analysed). An earlier run's survivor came from Stryker's incremental
+  cache and was confirmed killed by a manual revert.
+- **Verbatim law:** the legal reviewer's diff script
+  (`scratchpad/rev/diffkb.mjs`, positive control: one planted word change flagged) → 23 of 23
+  binding text lines found exactly in the Official Journal texts, including the new AIA-Art3-60.
+- **Correctness probe:** every answer combination (2,048,000) and every `nextStep` path (9,279)
+  checked for five invariants (can't tell names a fact; a missing fact is never answered; applies
+  without a date names the date fact; a firm verdict holds for every answer to an unanswered fact;
+  `both` takes the right side) → zero violations, with a planted two-change mutant caught.
+
+## Phase 6 review verdicts
+
+- **correctness-reviewer — APPROVE.** Open question (unchecked answer values give can't tell with
+  no missing fact, violating C5) → fixed: `nextStep` throws `InvalidAnswerError`, tested in both
+  directions (commit 1306ff7).
+- **patterns-auditor — 7 deviations.** Fixed in 9cc1b15: knowledge-base and C9 tests derive their
+  domain from `PROVISIONS_2026_11` and `LEGAL_TEST_STEPS`; `STEP_STATUS` is an exhaustive Record so
+  a new step cannot default to assessed; every applies-from date is tied to a cited provision (one
+  bounded exclusion, the Art. 111(4) transition, checked against its text); `RuleId` lives in
+  `rules.ts`; stale T-001 headers corrected. Evidence filled here. Deferred: linking adr-004 from
+  CLAUDE.md (polish).
+- **legal-claims-reviewer — 3 load-bearing, all confirmed against the source and fixed (9cc1b15).**
+  (1) Guideline para. 153 reads the Art. 111(4) transition as "placed on the market or put into
+  service"; the binding text says only "placed on the market". An in-house generator now gets the
+  binding 2 Aug 2026 date with the Commission's wider reading shown, labelled non-binding; the
+  guidance summary carries it. (2) The unsourced claim that rebranding does not make you a provider
+  is removed (Art. 25(1)(a) says the opposite for high-risk systems). (3) The deep-fake question now
+  uses Article 3(60)'s wording; AIA-Art3-60 is added verbatim and cited by rule 50-4a. A new
+  invariant checks that every Article a question cites resolves in the knowledge base. Open question
+  (staff options for a provider selling a staff tool) → labels now say "ours, or our customers'
+  staff".
 
 ## Decisions
 
@@ -350,4 +396,11 @@ _(filled during execution)_
 
 ## Outcome
 
-_(filled at close)_
+Done. The engine runs a full chatbot-transparency and AI-literacy assessment without UI: it asks
+whether the tool uses AI first, then only questions that can change a result when asked, and
+returns Art. 50(1)–(4) and Art. 4 verdicts (applies / doesn't apply / can't tell yet), each with a
+reason, its dates and knowledge-base citations, and marks prohibited, high-risk and exemption as
+not assessed. 15 → 16 provisions in knowledge base 2026.11. Design recorded in adr-004.
+Follow-ups for later tickets: the UI ticket consumes `nextStep`, `FACTS` and `InvalidAnswerError`;
+the "indicative assessment, not legal advice" and AI-generated labels are checked when results are
+rendered.
