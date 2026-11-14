@@ -1,0 +1,25 @@
+# dependencies and builds
+node_modules/
+.next/
+out/
+coverage/
+reports/
+.stryker-tmp/
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets (copy .env.example to .env.local)
+.env
+.env.*
+!.env.example
+
+# personal Claude Code settings
+.claude/settings.local.json
+
+# Impeccable scratch (decision rounds, mocks); runtime dirs ignore themselves
+.impeccable/questions-payload/
+.impeccable/mocks/
+
+# OS
+.DS_Store
+Thumbs.db

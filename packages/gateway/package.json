@@ -1,0 +1,19 @@
+{
+  "name": "@aag/gateway",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@aag/engine": "workspace:*",
+    "@ai-sdk/anthropic": "4.0.105",
+    "@ai-sdk/mistral": "4.0.87",
+    "@ai-sdk/openai": "4.0.118",
+    "ai": "7.0.173"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@aag/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@aag/engine": "workspace:*",
+    "drizzle-orm": "0.45.4"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.16",
+    "drizzle-kit": "0.31.11"
+  }
+}

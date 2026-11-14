@@ -1,0 +1,31 @@
+{
+  "name": "ai-act-guard",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.0.9",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "prepare": "git config core.hooksPath scripts/hooks",
+    "verify": "node scripts/verify-hooks-live.mjs && pnpm -r --if-present typecheck && prettier --check . && eslint . --max-warnings=0 && depcruise apps packages --config .dependency-cruiser.cjs && vitest run",
+    "format": "prettier --write .",
+    "lint": "eslint . --max-warnings=0",
+    "arch": "depcruise apps packages --config .dependency-cruiser.cjs",
+    "test": "vitest run",
+    "test:mutation": "stryker run",
+    "dev": "pnpm --filter @aag/web dev"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "16.4.6",
+    "@stryker-mutator/core": "10.1.1",
+    "@stryker-mutator/vitest-runner": "10.1.1",
+    "@types/node": "26.6.6",
+    "dependency-cruiser": "18.7.2",
+    "eslint": "10.15.0",
+    "prettier": "3.10.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2",
+    "vitest": "5.1.0"
+  }
+}

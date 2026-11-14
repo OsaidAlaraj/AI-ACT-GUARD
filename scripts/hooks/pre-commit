@@ -1,0 +1,14 @@
+#!/bin/sh
+# Authoritative gate (adr-002): a red verify aborts the commit, so every commit that lands is green.
+set -e
+
+# Work lands on main only through a reviewed pull request (adr-002, /work Phase 8).
+# The very first commit (no HEAD yet) bootstraps main and is allowed.
+branch="$(git symbolic-ref --short HEAD 2>/dev/null || echo detached)"
+if [ "$branch" = "main" ] && git rev-parse --verify -q HEAD >/dev/null && [ "${ALLOW_MAIN_COMMIT:-0}" != "1" ]; then
+  echo "pre-commit: direct commits to main are blocked; work on a ticket branch and open a PR." >&2
+  echo "pre-commit: (set ALLOW_MAIN_COMMIT=1 only for an approved bootstrap fix)" >&2
+  exit 1
+fi
+
+pnpm verify
