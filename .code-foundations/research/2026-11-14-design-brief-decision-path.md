@@ -206,8 +206,60 @@ question and is confirmed at "Check your details": one object, growing, from ent
   your details".
 - Website text is data: shown as plain text, never as HTML, never as instructions to the model.
 
-### 8.5 Question flow — options open
+### 8.5 Question flow — not decided (first drafts rejected)
 
 Real engine path for the chatbot deployer, driven 2026-11-14 (`nextStep` in a throwaway vitest
 probe): `usesAi` → `role` → `emotionOrBiometric` → `deepfake` → `publicInterestText` → result.
 For a deployer the engine never asks `interaction` (Art. 50(1) is the provider's duty).
+
+Demo state for the screen: a deployer at `emotionOrBiometric` (Transparency, Art. 50(3)); Start
+and Your role done; "About 2 more questions" (then `deepfake`, `publicInterestText`).
+
+**Rejected 2026-11-14:** three layouts in Figma section `Rejected · Question flow drafts (QA / QB
+/ QC)`: arc at the left, path across the top, arc around the question. Osaid: "all of them are so
+ugly", "the colours are so bold and the page is annoying". Causes:
+
+- too much slate blue (filled done nodes with checks, tinted halo, tinted selected answer, dark
+  button all competing);
+- too many things at once (eight labelled steps, "Not assessed in this version" three times, an
+  open "why we ask" box, a five-row persona card, a clarity line);
+- small type everywhere (11–15 px) and wireframe-level finish; three quick drafts instead of one
+  finished screen.
+
+**Direction for the next attempt (proposed, not yet approved): one quiet, finished version.**
+
+- The question is the only loud thing: large calm type, generous space. Slate blue only on the
+  Continue button.
+- The arc is a whisper: hairline line, small open circles; done = small dot inside, current =
+  slightly stronger ring. No fills, no halo.
+- Not-assessed steps: name only, in faint text, plus one short note (not three repeated labels).
+- Answers: white rows; the chosen one gets a fine slate outline, no coloured fill.
+- "Why we ask": a small link that opens on demand, closed by default.
+- Persona card: a slim summary ("Northstar · Support Assistant · Deployer") that expands on click.
+- Same rules as before: one background, floating cards (8.1), real engine copy (8.2.2).
+
+## 9. Status and hand-over (end of session 2026-11-14)
+
+**Decided:** design language and depth rule (8.1); the four Figma conflicts (8.2); Page 01 entry,
+E3 floating cards (8.3); Page 02 reading the website, B card fills in (8.4).
+
+**Left, in order:**
+
+1. Question flow (the arc): one quiet, finished version per 8.5, then Osaid approves or adjusts.
+2. "Check your details" checkpoint (confirms the persona card from Page 02).
+3. Contradiction and "Can't tell yet" states.
+4. Report: screen and PDF look.
+5. Verdict colours and the icon set (always word + shape, never colour alone); data
+   representation.
+6. Expert dashboard.
+7. Customer dashboard + profile: vision page only, clearly labelled; outside Stage A (`PLAN.md`
+   puts accounts in Phase 1). Ask Osaid before it becomes buildable.
+
+**Next session goal:** get the question screen approved: build the quiet version from 8.5 as one
+finished screen (ideally an HTML prototype that shows the real motion: arc drawing, cards flying
+with their shadow), ask Osaid for 2–3 reference products Osaid likes if the quiet version still
+misses, then record it here. After items 1–3, recommend the first build ticket: the first chatbot
+screens + the Playwright runtime harness (Stage A week 1).
+
+**How Osaid wants to work:** one page at a time, few options, Osaid picks. Quiet over bold. A single
+finished screen beats several rough drafts. No pile of overlapping cards.
