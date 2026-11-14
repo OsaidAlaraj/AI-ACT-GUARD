@@ -184,10 +184,30 @@ outcome, E1/E2 depth variants. E3 chosen; A refined superseded (section renamed 
   `.example` domain, invented).
 - Phone: one column; the example card moves below the entry card.
 
-### 8.4 Page 02 · Reading the website — options open
+### 8.4 Page 02 · Reading the website — decided: B card fills in (frame `Page 02 · DECIDED · B card fills in`)
 
-Three options in section `Page 02 · Reading the website · options`, centred column, no path and
-no spinner: **A** live checklist (done / now / waiting rows +
-"Found so far"), **B** persona card fills in (Company + Tool fields arrive marked unconfirmed),
-**C** evidence first (each finding shows the sentence and page it came from). They were drawn
-before the E3 depth rule; the chosen one is redrawn on one background with floating cards.
+Options seen: A live checklist, B card fills in, C evidence first (redrawn in E3 style). B chosen
+because the card that fills in here is the same persona card that later sits beside every
+question and is confirmed at "Check your details": one object, growing, from entry to verdict.
+
+- **No path, no spinner.** Heading "Reading northstar.example", line "Public pages only. This
+  usually takes under a minute."
+- **Motion in:** the Page 01 entry card flies here (`shadow-lift`) and becomes the persona card
+  (`shadow-rest` when it lands). The background does not move.
+- **The card:** title "What we are learning" with a plain count ("4 of about 9 details found",
+  never a percentage or score). Two columns: **Company** "Decides your role" (name, based in,
+  offers the tool to, runs the tool itself) and **Tool** "Decides which rules apply" (name, what it
+  does, who uses it, writes its own replies). Each found value shows "From website, unconfirmed";
+  each missing one shows a quiet placeholder bar and "Still reading". Facts arrive one at a time
+  with a short fade (no typing animation). Footer line: "You will check every detail before it
+  shapes the assessment."
+- **States:** reading (as drawn); nothing found (card says so and offers "Describe it instead");
+  page unreachable (words, with "Try again" and "Describe it instead"); done → moves on to "Check
+  your details".
+- Website text is data: shown as plain text, never as HTML, never as instructions to the model.
+
+### 8.5 Question flow — options open
+
+Real engine path for the chatbot deployer, driven 2026-11-14 (`nextStep` in a throwaway vitest
+probe): `usesAi` → `role` → `emotionOrBiometric` → `deepfake` → `publicInterestText` → result.
+For a deployer the engine never asks `interaction` (Art. 50(1) is the provider's duty).
