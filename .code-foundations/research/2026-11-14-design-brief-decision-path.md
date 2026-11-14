@@ -103,24 +103,35 @@ sections named `Decided · …`; open options sit in sections named `Page NN · 
 
 ### 8.1 Approved design language (supersedes §4 "Ground" and the palette idea)
 
-Flat silver-grey ground, white cards, slate-blue actions, fine borders. No gradients, bevels or
-raised shadows. Calm, professional, comfortable. Slow motion: persona and step transitions
-0.7–0.85 s, gentle ease-out, no bounce; reduced motion → appear without movement.
-Rejected: vermilion accent, sage "Quiet layers", pale emerald + butter yellow.
+Silver-grey ground, white cards, slate-blue actions. Calm, professional, comfortable. No gradients
+or bevels. Rejected: vermilion accent, sage "Quiet layers", pale emerald + butter yellow.
+
+**Depth rule (Osaid, 2026-11-14, Page 01 option E3; replaces "no raised shadows"):**
+- **One background, always the same.** Every screen sits on `bg`; it never changes, darkens or
+  splits into panels. No stage panels, stacked plates or tonal layers.
+- **Cards float.** Cards are white with no border; their soft shadow is part of the card and
+  travels with it. Nothing else on a page has depth (the arc and its circles sit flat on `bg`).
+- **The shadow moves with the card.** Resting: `shadow-rest`. When a card lifts or flies (a
+  question card arriving, the persona card sliding in, the entry card leaving), it rises and its
+  shadow grows to `shadow-lift`, then eases back to `shadow-rest` as it lands.
+- **Motion:** 0.7–0.85 s, gentle ease-out, no bounce. Reduced motion: no travel, a short
+  cross-fade, shadow stays at rest.
 
 Tokens (contrast measured with the WCAG formula, `node -e` script, 2026-11-14):
 
 | Token | Value | Use | Contrast |
 | --- | --- | --- | --- |
-| `bg` | `#f4f6f8` | page ground | — |
+| `bg` | `#eef1f4` | the one background, every screen | — |
 | `surface` | `#ffffff` | cards, inputs | — |
-| `surface-sunk` | `#eef1f4` | switch track, not-assessed node fill | — |
-| `ink` | `#2b3542` | headings, body | 11.47 on `bg` |
-| `ink-muted` | `#5d6976` | secondary text, step notes | 5.17 on `bg`, 4.94 on `surface-sunk` |
-| `action` | `#3c5875` | buttons, current step, labels | 6.81 on `bg`; white on it 7.38 |
+| `surface-sunk` | `#eef1f4` | switch track and wells inside a card | — |
+| `ink` | `#2b3542` | headings, body | 10.96 on `bg`, 12.42 on `surface` |
+| `ink-muted` | `#5d6976` | secondary text, step notes | 4.94 on `bg`, 5.60 on `surface` |
+| `action` | `#3c5875` | buttons, current step, labels | 6.51 on `bg`; white on it 7.38 |
 | `action-tint` | `#eaf0f6` | current-step pill, info panels | `action` on it 6.43 |
-| `line` | `#dfe4ea` | card borders, dividers (decorative) | — |
-| `line-state` | `#7b8794` | step-node outlines, dashed connectors (they carry state) | 3.38 on `bg`, 3.66 on `surface` |
+| `line` | `#dfe4ea` | input borders, row dividers inside cards (decorative) | — |
+| `line-state` | `#7b8794` | step-node outlines, dashed connectors (they carry state) | 3.23 on `bg`, 3.66 on `surface` |
+| `shadow-rest` | `0 1 2 rgba(31,41,56,.05), 0 6 18 rgba(31,41,56,.07)` | a card at rest | — |
+| `shadow-lift` | `0 2 4 rgba(31,41,56,.06), 0 18 40 rgba(31,41,56,.12)` | a card in motion | — |
 
 Fixed from the Figma baseline: muted text `#687482` measured 4.40 on `bg` (fails AA for small
 text) and is replaced by `ink-muted`. Fonts in the frames: Manrope (UI), Inter (labels, figures).
@@ -140,28 +151,43 @@ text) and is replaced by `ink-muted`. Fonts in the frames: Manrope (UI), Inter (
 4. **Live persona card + deeper page.** A compact Company + Tool card sits beside every question
    and fills in live; "Your persona" opens the full persona page for a closer look and edits.
 
-### 8.3 Page 01 · Entry — decided: A refined (frame `Page 01 · DECIDED · A refined`)
+### 8.3 Page 01 · Entry — decided: E3 floating cards (frame `Page 01 · DECIDED · E3 floating cards`)
 
-- **No decision path on this page** (Osaid, 2026-11-14). The path (arc) first appears when the
-  customer enters the questionnaire, with the first question; it draws in once, slowly
-  (0.7–0.85 s, reduced motion → appears). This supersedes §3A "the empty path is drawn faintly
-  behind the input". The reading-the-website step (Page 02) has no path either.
-- One centred column, 732 px wide: "Which AI tool are you assessing?", one card with a two-way switch **Website | Not public
-  yet** (replaces B's two cards and the "Describe your tool instead" link). Website: URL field,
-  helper "We read public pages only. What we find stays 'from website, unconfirmed' until you
-  check it.", primary button "Read website". Not public yet: a description field in the same card.
-- Below: prototype notice (invented company details only, no personal or customer data), then
-  "Next, you'll check what was found".
+Options seen: A Guided, B Two routes, C Persona origin, A refined, D Single line, E Show the
+outcome, E1/E2 depth variants. E3 chosen; A refined superseded (section renamed in Figma).
+
+- **No decision path on this page.** The path (arc) first appears when the customer enters the
+  questionnaire, with the first question, and draws in once (0.7–0.85 s). This supersedes §3A "the
+  empty path is drawn faintly behind the input". Page 02 (reading the website) has no path either.
+- **Left:** heading "Find out which AI Act rules apply to one AI tool"; one line "Paste its public
+  product page. We read it, you check what we found, then answer only the questions that change
+  the result."; then the **entry card**: two-way switch **Website | Not public yet**, URL field,
+  primary button "Read website", prototype line "Invented company details only. No personal or
+  customer data." Not public yet swaps the URL field for a description field in the same card.
+- **Right:** the **example card**, "What you get · example with invented data": Support
+  Assistant · Northstar Support Ltd · you use it (deployer), with one row per verdict type:
+  - Applies — AI literacy · Article 4 — "Staff who run the tool need enough AI literacy."
+  - Does not apply — Telling people they talk to AI · Article 50(1) — "That duty is the
+    provider's. Ask your vendor how it is shown."
+  - Can't tell yet — Disclosing AI-written text you publish · Article 50(4) — "Depends on whether
+    you publish its text to inform the public. One question settles it."
+  - Footer line: "Each verdict links to its evidence and source. Indicative, not legal advice."
+  The example is static and must stay consistent with the engine's rules for a deployer. Verdict
+  symbols here are placeholders until the icon set is decided (§8 later page).
+- **Motion out:** on "Read website" the entry card lifts (`shadow-lift`) and travels into the
+  Page 02 position; the example card fades back and leaves. The background does not move.
 - Footer on every screen: "AI-generated indicative assessment. Not legal advice." · "No account
   required".
 - States to build: empty, invalid URL (inline error under the field, words not colour), switch on
   Not public yet, submitting (button → "Reading…", disabled).
 - Example data: Northstar Support Ltd, `https://northstar.example/support-assistant` (reserved
   `.example` domain, invented).
+- Phone: one column; the example card moves below the entry card.
 
 ### 8.4 Page 02 · Reading the website — options open
 
 Three options in section `Page 02 · Reading the website · options`, centred column, no path and
 no spinner: **A** live checklist (done / now / waiting rows +
 "Found so far"), **B** persona card fills in (Company + Tool fields arrive marked unconfirmed),
-**C** evidence first (each finding shows the sentence and page it came from).
+**C** evidence first (each finding shows the sentence and page it came from). They were drawn
+before the E3 depth rule; the chosen one is redrawn on one background with floating cards.
