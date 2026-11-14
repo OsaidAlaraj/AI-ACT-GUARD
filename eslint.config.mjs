@@ -13,9 +13,15 @@ export default tseslint.config(
       ".impeccable/**",
       "design-system/**",
       "**/next-env.d.ts",
+      // Agent worktrees are full copies of the repo; each lints itself.
+      ".claude/worktrees/**",
     ],
   },
   ...tseslint.configs.recommended,
+  {
+    // Pin the root: a nested checkout (agent worktree) otherwise makes the parser ambiguous.
+    languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } },
+  },
   {
     rules: {
       "@typescript-eslint/no-unused-vars": [

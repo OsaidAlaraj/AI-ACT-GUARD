@@ -6,4 +6,5 @@ reports
 .stryker-tmp
 .impeccable
 design-system
+.claude/worktrees
 *.md
