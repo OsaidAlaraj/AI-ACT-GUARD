@@ -93,3 +93,75 @@ Step states (always shape + text, never colour alone):
 - How the high-risk branch is shown on a phone when it has many steps.
 - Fonts and final palette (at build, then recorded in DESIGN.md).
 - PDF: react-pdf (decided in Greenfield setup), with the path drawn as SVG.
+
+---
+
+## 8. Page decisions (page-by-page round, from 2026-11-14)
+
+Decided with Osaid one page at a time. Figma file `xNTQw7xAGzT4o1pLIjHoM4`: decided frames sit in
+sections named `Decided · …`; open options sit in sections named `Page NN · … · options`.
+
+### 8.1 Approved design language (supersedes §4 "Ground" and the palette idea)
+
+Flat silver-grey ground, white cards, slate-blue actions, fine borders. No gradients, bevels or
+raised shadows. Calm, professional, comfortable. Slow motion: persona and step transitions
+0.7–0.85 s, gentle ease-out, no bounce; reduced motion → appear without movement.
+Rejected: vermilion accent, sage "Quiet layers", pale emerald + butter yellow.
+
+Tokens (contrast measured with the WCAG formula, `node -e` script, 2026-11-14):
+
+| Token | Value | Use | Contrast |
+| --- | --- | --- | --- |
+| `bg` | `#f4f6f8` | page ground | — |
+| `surface` | `#ffffff` | cards, inputs | — |
+| `surface-sunk` | `#eef1f4` | switch track, not-assessed node fill | — |
+| `ink` | `#2b3542` | headings, body | 11.47 on `bg` |
+| `ink-muted` | `#5d6976` | secondary text, step notes | 5.17 on `bg`, 4.94 on `surface-sunk` |
+| `action` | `#3c5875` | buttons, current step, labels | 6.81 on `bg`; white on it 7.38 |
+| `action-tint` | `#eaf0f6` | current-step pill, info panels | `action` on it 6.43 |
+| `line` | `#dfe4ea` | card borders, dividers (decorative) | — |
+| `line-state` | `#7b8794` | step-node outlines, dashed connectors (they carry state) | 3.38 on `bg`, 3.66 on `surface` |
+
+Fixed from the Figma baseline: muted text `#687482` measured 4.40 on `bg` (fails AA for small
+text) and is replaced by `ink-muted`. Fonts in the frames: Manrope (UI), Inter (labels, figures).
+
+### 8.2 Resolved conflicts in the earlier Figma screens
+
+1. **Arc shows every legal-test step.** Prohibited?, High-risk? and Exemption? keep their real
+   place in the order, drawn as a dashed node and dashed connectors in `line-state`, with the
+   words "Not assessed in this version" (engine `STEP_STATUS`). A one-line legend under the arc
+   explains dashed steps. Never hidden, never given a verdict.
+2. **Questions come from the engine.** Screens show the real question, "why we ask" and options
+   from `FACTS` (`packages/engine/src/facts.ts`) and the verdict logic in `rules.ts`. The old
+   example ("Will people know they're interacting with AI?" asked of a deployer) is withdrawn:
+   Art. 50(1) is the provider's duty.
+3. **No Person persona.** Two parts only: Company (decides the role) and Tool (decides the risk).
+   No name, email or team role is collected.
+4. **Live persona card + deeper page.** A compact Company + Tool card sits beside every question
+   and fills in live; "Your persona" opens the full persona page for a closer look and edits.
+
+### 8.3 Page 01 · Entry — decided: A refined (frame `Page 01 · DECIDED · A refined`)
+
+- Left: the decision path, faint, all eight legal-test steps in order (Start, Prohibited?, Your
+  role, High-risk?, Exemption?, Transparency, AI literacy, Verdict), numbered 01–08. Start is
+  current (filled `action` node, 4 px `action-tint` ring, "You are here"). Assessed steps ahead:
+  white node, `line-state` outline, short note (e.g. "Article 50"). Not-assessed: see 8.2.1.
+- Right: "Which AI tool are you assessing?", one card with a two-way switch **Website | Not public
+  yet** (replaces B's two cards and the "Describe your tool instead" link). Website: URL field,
+  helper "We read public pages only. What we find stays 'from website, unconfirmed' until you
+  check it.", primary button "Read website". Not public yet: a description field in the same card.
+- Below: prototype notice (invented company details only, no personal or customer data), then
+  "Next, you'll check what was found".
+- Footer on every screen: "AI-generated indicative assessment. Not legal advice." · "No account
+  required".
+- States to build: empty, invalid URL (inline error under the field, words not colour), switch on
+  Not public yet, submitting (button → "Reading…", disabled).
+- Example data: Northstar Support Ltd, `https://northstar.example/support-assistant` (reserved
+  `.example` domain, invented).
+
+### 8.4 Page 02 · Reading the website — options open
+
+Three options in section `Page 02 · Reading the website · options`, all with Start as the current
+step ("Reading the website") and no spinner: **A** live checklist (done / now / waiting rows +
+"Found so far"), **B** persona card fills in (Company + Tool fields arrive marked unconfirmed),
+**C** evidence first (each finding shows the sentence and page it came from).
