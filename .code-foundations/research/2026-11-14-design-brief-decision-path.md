@@ -93,3 +93,173 @@ Step states (always shape + text, never colour alone):
 - How the high-risk branch is shown on a phone when it has many steps.
 - Fonts and final palette (at build, then recorded in DESIGN.md).
 - PDF: react-pdf (decided in Greenfield setup), with the path drawn as SVG.
+
+---
+
+## 8. Page decisions (page-by-page round, from 2026-11-14)
+
+Decided with Osaid one page at a time. Figma file `xNTQw7xAGzT4o1pLIjHoM4`: decided frames sit in
+sections named `Decided · …`; open options sit in sections named `Page NN · … · options`.
+
+### 8.1 Approved design language (supersedes §4 "Ground" and the palette idea)
+
+Silver-grey ground, white cards, slate-blue actions. Calm, professional, comfortable. No gradients
+or bevels. Rejected: vermilion accent, sage "Quiet layers", pale emerald + butter yellow.
+
+**Depth rule (Osaid, 2026-11-14, Page 01 option E3; replaces "no raised shadows"):**
+- **One background, always the same.** Every screen sits on `bg`; it never changes, darkens or
+  splits into panels. No stage panels, stacked plates or tonal layers.
+- **Cards float.** Cards are white with no border; their soft shadow is part of the card and
+  travels with it. Nothing else on a page has depth (the arc and its circles sit flat on `bg`).
+- **The shadow moves with the card.** Resting: `shadow-rest`. When a card lifts or flies (a
+  question card arriving, the persona card sliding in, the entry card leaving), it rises and its
+  shadow grows to `shadow-lift`, then eases back to `shadow-rest` as it lands.
+- **Motion:** 0.7–0.85 s, gentle ease-out, no bounce. Reduced motion: no travel, a short
+  cross-fade, shadow stays at rest.
+
+Tokens (contrast measured with the WCAG formula, `node -e` script, 2026-11-14):
+
+| Token | Value | Use | Contrast |
+| --- | --- | --- | --- |
+| `bg` | `#eef1f4` | the one background, every screen | — |
+| `surface` | `#ffffff` | cards, inputs | — |
+| `surface-sunk` | `#eef1f4` | switch track and wells inside a card | — |
+| `ink` | `#2b3542` | headings, body | 10.96 on `bg`, 12.42 on `surface` |
+| `ink-muted` | `#5d6976` | secondary text, step notes | 4.94 on `bg`, 5.60 on `surface` |
+| `action` | `#3c5875` | buttons, current step, labels | 6.51 on `bg`; white on it 7.38 |
+| `action-tint` | `#eaf0f6` | current-step pill, info panels | `action` on it 6.43 |
+| `line` | `#dfe4ea` | input borders, row dividers inside cards (decorative) | — |
+| `line-state` | `#7b8794` | step-node outlines, dashed connectors (they carry state) | 3.23 on `bg`, 3.66 on `surface` |
+| `shadow-rest` | `0 1 2 rgba(31,41,56,.05), 0 6 18 rgba(31,41,56,.07)` | a card at rest | — |
+| `shadow-lift` | `0 2 4 rgba(31,41,56,.06), 0 18 40 rgba(31,41,56,.12)` | a card in motion | — |
+
+Fixed from the Figma baseline: muted text `#687482` measured 4.40 on `bg` (fails AA for small
+text) and is replaced by `ink-muted`. Fonts in the frames: Manrope (UI), Inter (labels, figures).
+
+### 8.2 Resolved conflicts in the earlier Figma screens
+
+1. **Arc shows every legal-test step.** Prohibited?, High-risk? and Exemption? keep their real
+   place in the order, drawn as a dashed node and dashed connectors in `line-state`, with the
+   words "Not assessed in this version" (engine `STEP_STATUS`). A one-line legend under the arc
+   explains dashed steps. Never hidden, never given a verdict.
+2. **Questions come from the engine.** Screens show the real question, "why we ask" and options
+   from `FACTS` (`packages/engine/src/facts.ts`) and the verdict logic in `rules.ts`. The old
+   example ("Will people know they're interacting with AI?" asked of a deployer) is withdrawn:
+   Art. 50(1) is the provider's duty.
+3. **No Person persona.** Two parts only: Company (decides the role) and Tool (decides the risk).
+   No name, email or team role is collected.
+4. **Live persona card + deeper page.** A compact Company + Tool card sits beside every question
+   and fills in live; "Your persona" opens the full persona page for a closer look and edits.
+
+### 8.3 Page 01 · Entry — decided: E3 floating cards (frame `Page 01 · DECIDED · E3 floating cards`)
+
+Options seen: A Guided, B Two routes, C Persona origin, A refined, D Single line, E Show the
+outcome, E1/E2 depth variants. E3 chosen; A refined superseded (section renamed in Figma).
+
+- **No decision path on this page.** The path (arc) first appears when the customer enters the
+  questionnaire, with the first question, and draws in once (0.7–0.85 s). This supersedes §3A "the
+  empty path is drawn faintly behind the input". Page 02 (reading the website) has no path either.
+- **Left:** heading "Find out which AI Act rules apply to one AI tool"; one line "Paste its public
+  product page. We read it, you check what we found, then answer only the questions that change
+  the result."; then the **entry card**: two-way switch **Website | Not public yet**, URL field,
+  primary button "Read website", prototype line "Invented company details only. No personal or
+  customer data." Not public yet swaps the URL field for a description field in the same card.
+- **Right:** the **example card**, "What you get · example with invented data": Support
+  Assistant · Northstar Support Ltd · you use it (deployer), with one row per verdict type:
+  - Applies — AI literacy · Article 4 — "Staff who run the tool need enough AI literacy."
+  - Does not apply — Telling people they talk to AI · Article 50(1) — "That duty is the
+    provider's. Ask your vendor how it is shown."
+  - Can't tell yet — Disclosing AI-written text you publish · Article 50(4) — "Depends on whether
+    you publish its text to inform the public. One question settles it."
+  - Footer line: "Each verdict links to its evidence and source. Indicative, not legal advice."
+  The example is static and must stay consistent with the engine's rules for a deployer. Verdict
+  symbols here are placeholders until the icon set is decided (§8 later page).
+- **Motion out:** on "Read website" the entry card lifts (`shadow-lift`) and travels into the
+  Page 02 position; the example card fades back and leaves. The background does not move.
+- Footer on every screen: "AI-generated indicative assessment. Not legal advice." · "No account
+  required".
+- States to build: empty, invalid URL (inline error under the field, words not colour), switch on
+  Not public yet, submitting (button → "Reading…", disabled).
+- Example data: Northstar Support Ltd, `https://northstar.example/support-assistant` (reserved
+  `.example` domain, invented).
+- Phone: one column; the example card moves below the entry card.
+
+### 8.4 Page 02 · Reading the website — decided: B card fills in (frame `Page 02 · DECIDED · B card fills in`)
+
+Options seen: A live checklist, B card fills in, C evidence first (redrawn in E3 style). B chosen
+because the card that fills in here is the same persona card that later sits beside every
+question and is confirmed at "Check your details": one object, growing, from entry to verdict.
+
+- **No path, no spinner.** Heading "Reading northstar.example", line "Public pages only. This
+  usually takes under a minute."
+- **Motion in:** the Page 01 entry card flies here (`shadow-lift`) and becomes the persona card
+  (`shadow-rest` when it lands). The background does not move.
+- **The card:** title "What we are learning" with a plain count ("4 of about 9 details found",
+  never a percentage or score). Two columns: **Company** "Decides your role" (name, based in,
+  offers the tool to, runs the tool itself) and **Tool** "Decides which rules apply" (name, what it
+  does, who uses it, writes its own replies). Each found value shows "From website, unconfirmed";
+  each missing one shows a quiet placeholder bar and "Still reading". Facts arrive one at a time
+  with a short fade (no typing animation). Footer line: "You will check every detail before it
+  shapes the assessment."
+- **States:** reading (as drawn); nothing found (card says so and offers "Describe it instead");
+  page unreachable (words, with "Try again" and "Describe it instead"); done → moves on to "Check
+  your details".
+- Website text is data: shown as plain text, never as HTML, never as instructions to the model.
+
+### 8.5 Question flow — not decided (first drafts rejected)
+
+Real engine path for the chatbot deployer, driven 2026-11-14 (`nextStep` in a throwaway vitest
+probe): `usesAi` → `role` → `emotionOrBiometric` → `deepfake` → `publicInterestText` → result.
+For a deployer the engine never asks `interaction` (Art. 50(1) is the provider's duty).
+
+Demo state for the screen: a deployer at `emotionOrBiometric` (Transparency, Art. 50(3)); Start
+and Your role done; "About 2 more questions" (then `deepfake`, `publicInterestText`).
+
+**Rejected 2026-11-14:** three layouts in Figma section `Rejected · Question flow drafts (QA / QB
+/ QC)`: arc at the left, path across the top, arc around the question. Osaid: "all of them are so
+ugly", "the colours are so bold and the page is annoying". Causes:
+
+- too much slate blue (filled done nodes with checks, tinted halo, tinted selected answer, dark
+  button all competing);
+- too many things at once (eight labelled steps, "Not assessed in this version" three times, an
+  open "why we ask" box, a five-row persona card, a clarity line);
+- small type everywhere (11–15 px) and wireframe-level finish; three quick drafts instead of one
+  finished screen.
+
+**Direction for the next attempt (proposed, not yet approved): one quiet, finished version.**
+
+- The question is the only loud thing: large calm type, generous space. Slate blue only on the
+  Continue button.
+- The arc is a whisper: hairline line, small open circles; done = small dot inside, current =
+  slightly stronger ring. No fills, no halo.
+- Not-assessed steps: name only, in faint text, plus one short note (not three repeated labels).
+- Answers: white rows; the chosen one gets a fine slate outline, no coloured fill.
+- "Why we ask": a small link that opens on demand, closed by default.
+- Persona card: a slim summary ("Northstar · Support Assistant · Deployer") that expands on click.
+- Same rules as before: one background, floating cards (8.1), real engine copy (8.2.2).
+
+## 9. Status and hand-over (end of session 2026-11-14)
+
+**Decided:** design language and depth rule (8.1); the four Figma conflicts (8.2); Page 01 entry,
+E3 floating cards (8.3); Page 02 reading the website, B card fills in (8.4).
+
+**Left, in order:**
+
+1. Question flow (the arc): one quiet, finished version per 8.5, then Osaid approves or adjusts.
+2. "Check your details" checkpoint (confirms the persona card from Page 02).
+3. Contradiction and "Can't tell yet" states.
+4. Report: screen and PDF look.
+5. Verdict colours and the icon set (always word + shape, never colour alone); data
+   representation.
+6. Expert dashboard.
+7. Customer dashboard + profile: vision page only, clearly labelled; outside Stage A (`PLAN.md`
+   puts accounts in Phase 1). Ask Osaid before it becomes buildable.
+
+**Next session goal:** get the question screen approved: build the quiet version from 8.5 as one
+finished screen (ideally an HTML prototype that shows the real motion: arc drawing, cards flying
+with their shadow), ask Osaid for 2–3 reference products Osaid likes if the quiet version still
+misses, then record it here. After items 1–3, recommend the first build ticket: the first chatbot
+screens + the Playwright runtime harness (Stage A week 1).
+
+**How Osaid wants to work:** one page at a time, few options, Osaid picks. Quiet over bold. A single
+finished screen beats several rough drafts. No pile of overlapping cards.
